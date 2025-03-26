@@ -6,23 +6,25 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime
 
-#Get API from .env file
-load_dotenv(".env")
-YOUR_API_KEY = os.getenv('apikey')
 print("")
-print("<<-- Dr.Matvey's Weather App Console Log-->>     Version: 0.0.5")
+print("<<-- Dr.Matvey's Weather App Console Log-->>     Version: 0.0.6")
 print("""
 Log Actor List: 
 [ Ack ] (Acknowledge) = Api acknowledge message
 [ Sys ] (System) = Process related message / Process Status
 [ Err ] (Error) = Error/Exeption - Related to current process
+[ Idl ] (Idle) = Idle/Waiting, no processes
 [=STR=] (Start) = Marks start of a process - The following logs are related to this process until next [=STR=] is called
 This console is used for debugging only, please look to TkInter Window
 """)
-print("[=STR=] - Weather App initialised - Awaiting input")
+print("<<===== LOG =====>>")
+print("[=STR=] - Main Program Start | Retrieve API key ")
+load_dotenv(".env")
+YOUR_API_KEY = os.getenv('apikey')
+set_marker = None
+print("[ Idl ] - Idle")
 
-
-# - - - - LOGIC
+# - - - - LOGIC - - - -
 
 def getweathercurrent(lat, lon):
     print("[=STR=] - Get Current Weather Data")
@@ -79,10 +81,16 @@ def getweatherforecast(lat, lon):
         print("[ Err ] Request Failed: Other - Text: ", api_response.text)
 
 def place_marker(coords):
+    global set_marker
     print("[=STR=] - Click Map Data")
     print("[ Sys ] - Current Function: place_marker")
     lat, lon = coords
     print("[ Sys ] - User Interaction : Lat-", lat, "Lon-", lon)
+    if set_marker is not None:
+        set_marker.delete()
+        print("[ Sys ] - Deleted Previous Marker")
+    print("[ Sys ] - Create Marker")
+    set_marker = map_widget.set_marker(lat, lon, text="Selected Location")
     print("[ Sys ] - Function Call : getweathercurrent")
     getweathercurrent(lat, lon)
     print("[ Sys ] - Function Call : getweatherforecast")
@@ -91,14 +99,12 @@ def place_marker(coords):
     
     
 
-# - - - - VISUAL
-#opprette tkinter vindu med navn og størrelse
+# - - - - VISUAL - - - -
 root_tk = tk.Tk()
 root_tk.geometry(f"{800}x{500}")
 root_tk.title("Dr.Matvey's Syke Værapp")
 root_tk.resizable(False, False)
 
-# map widget config størrelse og plassering osv
 map_widget = tkmap.TkinterMapView(root_tk, width=500, height=500, corner_radius=0)
 map_widget.grid(rowspan = 2, padx = 0, pady = 0)
 map_widget.set_position(59.669199, 9.647202)
@@ -107,3 +113,7 @@ map_widget.add_left_click_map_command(place_marker)
 
 
 root_tk.mainloop()
+
+#KI BRUKT TIL: 
+#Slette gammel map marker slik at det ikke blir laget flere markers
+#Fikse sånn at man ser dato i uke forecast
