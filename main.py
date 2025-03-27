@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime
 
-v="0.1.4" # version number
+v="0.1.5" # version number
 print("")
 print(f"<<-- Dr.Matvey's Wicked Weather App Console Log-->>     Version: {v}")
 print("""
@@ -50,12 +50,14 @@ def getweathercurrent(lat, lon): # get current weather
         humidity = data["main"]["humidity"]
         wind_speed =data["wind"]["speed"]
         wind_deg = data["wind"]["deg"]
+
         print(f"[ Sys ] - Readable Format: City: {city} | Country: {country} | Conditions: {condition} | Temperature: {temp}°C | Feels like: {temp_feels}°C | Pressure: {pressure}Pa | Humidity: {humidity}% | Wind Speed {wind_speed}m/s | Wind Deg: {wind_deg}°")
 
         weather_location.set(f"Conditions in {city}, {country}")
         weather_current.set(f"Current condition(s): {condition}. Temperature at {temp}°C (Feels like: {temp_feels}°C) Winds at {wind_speed}m/s from {wind_deg}°. Pressure: {pressure}Pa Humidity: {humidity}%")
 
         print("[=END=] - Get Current Weather Data")
+
     elif api_response.status_code==404: 
         print("[ Err ] Denied - Status: ", api_response.status_code)
         print("[ Err ] Denied - Server could not find the client-requested webpage")
@@ -63,6 +65,7 @@ def getweathercurrent(lat, lon): # get current weather
         print("[ Err ] Denied - Data: ", data)
         print("[=END=] - Get Current Weather Data")
         messagebox.showerror("Failed to contact server", "Error 404 - could not contact server. Check your internet connection and try again.")
+
     else:
         print("[ Err ] Request Failed: Other - Status: ", api_response.status_code)
         print("[ Err ] Request Failed: Other - Text: ", api_response.text)
@@ -79,11 +82,27 @@ def getweatherforecast(lat, lon): # get 7 day forecast
     if api_response.status_code==200:
         print("[ Ack ] - Api Status: ", api_response.status_code)
         print("[ Ack ] - Api Returned Data: ", data)
-        print("[ Sys ] - Assigning Variables")
+        
+        forecast_list = [] #Array for 7 days of data :))
 
-        print("[ Sys ] - Rqst empty, for now")
+        for day in data["list"]:
+            print("[ Sys ] - Looping Through Days")
+            day = datetime.fromtimestamp(day["dt"]).strftime("%A %d.%m")
+            print("[ Sys ] - Assigning Variables")
 
+            condition = data["weather"][0]["description"]
+            temp = data["temp"]["day"]
+            temp_min = data["temp"]["min"]
+            temp_max = data["temp"]["max"]
+            humidity = data["humidity"]
+
+            forecast_list.append(f"{day}: Will be {condition}. Temp: {temp}°C (Min: {temp_min}°C Max: {temp_max}°C) Humidity {humidity}% \n")
+            print(f"[ Sys ] - Added {day} data to list")
+        
+        print("[ Sys ] - Forecast List Updated")
+        weather_forecast.set("\n".join(forecast_list))
         print("[=END=] - Get Weather Forecast Data")
+
     elif api_response.status_code==404:
         print("[ Err ] Denied - Status: ", api_response.status_code)
         print("[ Err ] Denied - Server could not find the client-requested webpage")
@@ -97,6 +116,7 @@ def getweatherforecast(lat, lon): # get 7 day forecast
         print("[ Err ] Request Failed: Other - Text: ", api_response.text)
         print("[=END=] - Get Weather Forecast Data")
         messagebox.showerror("Unexpected Error", "An unexpected error occurred - Check console or close program")
+    
 
 
 def place_marker(coords): #User map interaction
@@ -207,9 +227,20 @@ weather_current_label = tk.Label(
     padx=10,
     pady=10,
     justify=tk.CENTER,
-    wraplength=320
+    wraplength=310
 )
-weather_current_label.grid(row=2, column=1, columnspan=2, rowspan=1)
+weather_current_label.grid(row=1, column=1, columnspan=2, rowspan=2)
+
+weather_forecast_label = tk.Label(
+    root_tk,
+    textvariable=weather_forecast,
+    anchor=tk.CENTER,
+    font=("Arial", 14, "bold"),
+    fg="black",
+    padx=25,
+    justify=tk.CENTER,
+)
+weather_forecast_label.grid(row=2, column=1, columnspan=2, rowspan=3)
 
 
 
@@ -217,5 +248,7 @@ root_tk.mainloop()
 
 #KI BRUKT TIL: 
 #Slette gammel map marker slik at det ikke blir laget flere markers
-#Forklare feilmeldinger
+#Forklare feilmeldinger <- 
 #Forklare hvordan grid fungerer i tkinter
+#Den tingen som lister gjennom dager og legger til dager i lista
+#Den tingen som får med "Mandag" "Tirsdag" "Torsdag" osv
