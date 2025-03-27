@@ -6,8 +6,9 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime
 
+v="0.1.1" # version number, remember to update!
 print("")
-print("<<-- Dr.Matvey's Wicked Weather App Console Log-->>     Version: 0.1.0")
+print(f"<<-- Dr.Matvey's Wicked Weather App Console Log-->>     Version: {v}")
 print("""
 Log Actor List: 
 [ Ack ] (Acknowledge) = Api acknowledge message.
@@ -125,15 +126,18 @@ map_widget = tkmap.TkinterMapView(root_tk, width=500, height=500, corner_radius=
 map_widget.grid(row=0, column=0, rowspan=5, padx=0, pady=0)
 map_widget.set_position(59.669199, 9.647202)
 map_widget.set_zoom(12)
+map_widget.add_left_click_map_command(place_marker)
 
 title_static = tk.StringVar()
 title_static.set("Dr. Matvey's Wicked Weather App")
 
-
 description_static = tk.StringVar()
 description_static.set("Welcome! Click on the map to see weather data.")
 
+version = tk.StringVar()
+version.set(f"Version: {v}")
 
+#Title
 title_static_label = tk.Label(
     root_tk,
     textvariable=title_static,
@@ -141,11 +145,11 @@ title_static_label = tk.Label(
     font=("Arial", 14, "bold"),
     fg="black",
     padx=25,
-    pady=10,
     justify=tk.CENTER,
 )
 title_static_label.grid(row=0, column=1, columnspan=2, rowspan=1)
 
+#Description
 description_static_label = tk.Label(
     root_tk,
     textvariable=description_static,
@@ -153,10 +157,21 @@ description_static_label = tk.Label(
     font=("Arial", 10),
     fg="black",
     padx=25,
-    pady=10,
     justify=tk.CENTER,
 )
 description_static_label.grid(row=0, column=1, columnspan=2, rowspan=2)
+
+#Version Num
+version_label = tk.Label(
+    root_tk,
+    textvariable=version,
+    anchor=tk.CENTER,
+    font=("Arial", 6, "bold"),
+    fg="grey",
+    padx=10,
+    justify=tk.CENTER,
+)
+version_label.grid(row=4, column=1, columnspan=2, rowspan=2)
 
 
 
@@ -167,3 +182,4 @@ root_tk.mainloop()
 #KI BRUKT TIL: 
 #Slette gammel map marker slik at det ikke blir laget flere markers
 #Forklare feilmeldinger
+#Forklare hvordan grid fungerer i tkinter og hvordan jeg kan "finetune" den
