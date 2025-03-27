@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 
 print("")
-print("<<-- Dr.Matvey's Weather App Console Log-->>     Version: 0.0.7")
+print("<<-- Dr.Matvey's Weather App Console Log-->>     Version: 0.0.9")
 print("""
 Log Actor List: 
 [ Ack ] (Acknowledge) = Api acknowledge message
@@ -50,12 +50,14 @@ def getweathercurrent(lat, lon):
         
     elif api_response.status_code==404:
         print("[ Err ] Denied - Status: ", api_response.status_code)
-        print("[ Err ] Denied - Server could not find a client-requested webpage")
+        print("[ Err ] Denied - Server could not find the client-requested webpage")
         print("[ Err ] Denied - Text: ", api_response.text)
         print("[ Err ] Denied - Data: ", data)
+        messagebox.showerror("Failed to contact server", "Error 404 - could not contact server. Check your internet connection and try again.")
     else:
         print("[ Err ] Request Failed: Other - Status: ", api_response.status_code)
         print("[ Err ] Request Failed: Other - Text: ", api_response.text)
+        messagebox.showerror("Unexpected Error", "An unexpected error occurred - Check console or close program")
 
 def getweatherforecast(lat, lon):
     print("[=STR=] - Get Weather Forecast Data")
@@ -72,12 +74,14 @@ def getweatherforecast(lat, lon):
         
     elif api_response.status_code==404:
         print("[ Err ] Denied - Status: ", api_response.status_code)
-        print("[ Err ] Denied - Server could not find a client-requested webpage")
+        print("[ Err ] Denied - Server could not find the client-requested webpage")
         print("[ Err ] Denied - Text: ", api_response.text)
         print("[ Err ] Denied - Data: ", data)
+        messagebox.showerror("Failed to contact server", "Error 404 - could not contact server. Check your internet connection and try again.")
     else:
         print("[ Err ] Request Failed: Other - Status: ", api_response.status_code)
         print("[ Err ] Request Failed: Other - Text: ", api_response.text)
+        messagebox.showerror("Unexpected Error", "An unexpected error occurred - Check console or close program")
 
 def place_marker(coords):
     lat, lon = coords
@@ -116,4 +120,4 @@ root_tk.mainloop()
 
 #KI BRUKT TIL: 
 #Slette gammel map marker slik at det ikke blir laget flere markers
-#Fikse sånn at man ser dato i uke forecast
+#
