@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime
 
-v="0.1.2" # version number, remember to update!
+v="0.1.3" # version number
 print("")
 print(f"<<-- Dr.Matvey's Wicked Weather App Console Log-->>     Version: {v}")
 print("""
@@ -26,9 +26,11 @@ YOUR_API_KEY = os.getenv('apikey') #testkey = test key (t) apikey = main key
 set_marker = None
 print("[ Idl ] - Idle, Click on map") 
 
-# - - - - LOGIC - - - -
 
-def getweathercurrent(lat, lon):
+#-----------------------#
+# - - - - LOGIC - - - - #
+#-----------------------#
+def getweathercurrent(lat, lon): # get current weather
     print("[=STR=] - Get Current Weather Data")
     print("[ Sys ] - Current Function: getweathercurrent")
     print("[ Sys ] - Api call Start")
@@ -49,9 +51,12 @@ def getweathercurrent(lat, lon):
         pressure = data["main"]["pressure"]
         humidity = data["main"]["humidity"]
         print(f"[ Sys ] - Readable Format: City: {city} | Country: {country} | Conditions: {condition} | Temperature: {temp}°C | Feels like: {temp_feels}°C | Min temp: {temp_min}°C Max temp: {temp_max}°C | Pressure: {pressure}Pa | Humidity: {humidity}% |")
+
+        weather_location.set(f"Showing for {city}, {country}")
+        weather_current.set(f"Condition: {condition} Temp: {temp}°C (Feels like: {temp_feels}°C) Humidity {humidity}%")
+
         print("[=END=] - Get Current Weather Data")
-        
-    elif api_response.status_code==404:
+    elif api_response.status_code==404: 
         print("[ Err ] Denied - Status: ", api_response.status_code)
         print("[ Err ] Denied - Server could not find the client-requested webpage")
         print("[ Err ] Denied - Text: ", api_response.text)
@@ -64,7 +69,8 @@ def getweathercurrent(lat, lon):
         print("[=END=] - Get Current Weather Data")
         messagebox.showerror("Unexpected Error", "An unexpected error occurred - Check console or close program")
 
-def getweatherforecast(lat, lon):
+
+def getweatherforecast(lat, lon): # get 7 day forecast
     print("[=STR=] - Get Weather Forecast Data")
     print("[ Sys ] - Current Function: getweatherforecast")
     print("[ Sys ] - Api call Start")
@@ -78,7 +84,6 @@ def getweatherforecast(lat, lon):
         print("[ Sys ] - Rqst empty, for now")
 
         print("[=END=] - Get Weather Forecast Data")
-        
     elif api_response.status_code==404:
         print("[ Err ] Denied - Status: ", api_response.status_code)
         print("[ Err ] Denied - Server could not find the client-requested webpage")
@@ -93,7 +98,8 @@ def getweatherforecast(lat, lon):
         print("[=END=] - Get Weather Forecast Data")
         messagebox.showerror("Unexpected Error", "An unexpected error occurred - Check console or close program")
 
-def place_marker(coords):
+
+def place_marker(coords): #User map interaction
     lat, lon = coords
     global set_marker
     print("[=STR=] - Click Map Data")
@@ -112,14 +118,14 @@ def place_marker(coords):
 
     
     
-
-# - - - - VISUAL - - - -
+#------------------------#
+# - - - - VISUAL - - - - #
+#------------------------#
 root_tk = tk.Tk()
 root_tk.geometry(f"{800}x{500}")
 root_tk.title("Dr. Matvey's Wicked Weather App")
 root_tk.iconbitmap("logo.ico")
 root_tk.resizable(False, False)
-
 root_tk.grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
 root_tk.grid_columnconfigure((0, 1, 2, 3, 4), weight=1)
 
@@ -129,6 +135,10 @@ map_widget.set_position(59.669199, 9.647202)
 map_widget.set_zoom(12)
 map_widget.add_left_click_map_command(place_marker)
 
+
+
+
+#Labels
 title_static = tk.StringVar()
 title_static.set("Dr. Matvey's Wicked Weather App")
 
@@ -138,7 +148,12 @@ description_static.set("Welcome! Click on the map to see weather data.")
 version = tk.StringVar()
 version.set(f"Version: {v}")
 
-#Title
+weather_location = tk.StringVar()
+weather_current = tk.StringVar()
+weather_forecast = tk.StringVar()
+
+
+#Label Design / Layout
 title_static_label = tk.Label(
     root_tk,
     textvariable=title_static,
@@ -150,7 +165,6 @@ title_static_label = tk.Label(
 )
 title_static_label.grid(row=0, column=1, columnspan=2, rowspan=1)
 
-#Description
 description_static_label = tk.Label(
     root_tk,
     textvariable=description_static,
@@ -161,8 +175,7 @@ description_static_label = tk.Label(
     justify=tk.CENTER,
 )
 description_static_label.grid(row=0, column=1, columnspan=2, rowspan=2)
-
-#Version Num
+ 
 version_label = tk.Label(
     root_tk,
     textvariable=version,
@@ -174,13 +187,34 @@ version_label = tk.Label(
 )
 version_label.grid(row=4, column=1, columnspan=2, rowspan=2)
 
+weather_location_label = tk.Label(
+    root_tk,
+    textvariable=weather_location,
+    anchor=tk.CENTER,
+    font=("Arial", 14, "bold"),
+    fg="black",
+    padx=10,
+    justify=tk.CENTER,
+)
+weather_location_label.grid(row=1, column=1, columnspan=2, rowspan=1)
+
+weather_current_label = tk.Label(
+    root_tk,
+    textvariable=weather_current,
+    anchor=tk.CENTER,
+    font=("Arial", 8, "bold"),
+    fg="black",
+    padx=10,
+    pady=10,
+    justify=tk.CENTER,
+)
+weather_current_label.grid(row=2, column=1, columnspan=2, rowspan=1)
 
 
 
 root_tk.mainloop()
 
-
 #KI BRUKT TIL: 
 #Slette gammel map marker slik at det ikke blir laget flere markers
 #Forklare feilmeldinger
-#Forklare hvordan grid fungerer i tkinter og hvordan jeg kan "finetune" den
+#Forklare hvordan grid fungerer i tkinter
