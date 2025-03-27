@@ -7,15 +7,16 @@ from dotenv import load_dotenv
 from datetime import datetime
 
 print("")
-print("<<-- Dr.Matvey's Weather App Console Log-->>     Version: 0.0.9")
+print("<<-- Dr.Matvey's Wicked Weather App Console Log-->>     Version: 0.1.0")
 print("""
 Log Actor List: 
-[ Ack ] (Acknowledge) = Api acknowledge message
-[ Sys ] (System) = Process related message / Process Status
-[ Err ] (Error) = Error/Exeption - Related to current process
-[ Idl ] (Idle) = Idle/Waiting, no processes
-[=STR=] (Start) = Marks start of a process - The following logs are related to this process until next [=STR=] is called
-This console is used for debugging only, please look to TkInter Window for weather data
+[ Ack ] (Acknowledge) = Api acknowledge message.
+[ Sys ] (System) = Process related message / Process Status.
+[ Err ] (Error) = Error/Exeption - Related to current process.
+[ Idl ] (Idle) = Idle/Waiting, no processes.
+[=STR=] (Start) = Marks start of a function - The following logs are related to this process until [=END=] is called.
+[=END=] (End) = Marks end of a function.
+This console is used for debugging only, please look to TkInter Window for readable weather data.
 """)
 print("<<===== LOG =====>>")
 print("[=STR=] - Main Start")
@@ -30,7 +31,7 @@ def getweathercurrent(lat, lon):
     print("[=STR=] - Get Current Weather Data")
     print("[ Sys ] - Current Function: getweathercurrent")
     print("[ Sys ] - Api call Start")
-    api_response = requests.get(f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={YOUR_API_KEY}&units=metric")
+    api_response = requests.get(f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={YOUR_API_KEY}&units=metric") #replace YOUR_API_KEY with your key to get weather data
     data = api_response.json()
     if api_response.status_code==200:
         print("[ Ack ] - Api Status: ", api_response.status_code)
@@ -41,29 +42,32 @@ def getweathercurrent(lat, lon):
         city = data["name"]
         condition = data["weather"][0]["description"]
         temp = data["main"]["temp"]
-        feelslike = data["main"]["feels_like"]
-        min_temp = data["main"]["temp_min"]
-        max_temp = data["main"]["temp_max"]
+        temp_feels = data["main"]["feels_like"]
+        temp_min = data["main"]["temp_min"]
+        temp_max = data["main"]["temp_max"]
         pressure = data["main"]["pressure"]
         humidity = data["main"]["humidity"]
-        print("[ Sys ] - Readable Format: ","City: ", city ,"Country: ", country,"Condition: ", condition,"Temperature: ", temp,"Feels like: ", feelslike, "Minimum Temp: ", min_temp,"Maximum Temp: ", max_temp,"Humidity: ", humidity,"Pressure: ", pressure)
+        print(f"[ Sys ] - Readable Format: City: {city} | Country: {country} | Conditions: {condition} | Temperature: {temp}°C | Feels like: {temp_feels}°C | Min temp: {temp_min}°C Max temp: {temp_max}°C | Pressure: {pressure}Pa | Humidity: {humidity}% |")
+        print("[=END=] - Get Current Weather Data")
         
     elif api_response.status_code==404:
         print("[ Err ] Denied - Status: ", api_response.status_code)
         print("[ Err ] Denied - Server could not find the client-requested webpage")
         print("[ Err ] Denied - Text: ", api_response.text)
         print("[ Err ] Denied - Data: ", data)
+        print("[=END=] - Get Current Weather Data")
         messagebox.showerror("Failed to contact server", "Error 404 - could not contact server. Check your internet connection and try again.")
     else:
         print("[ Err ] Request Failed: Other - Status: ", api_response.status_code)
         print("[ Err ] Request Failed: Other - Text: ", api_response.text)
+        print("[=END=] - Get Current Weather Data")
         messagebox.showerror("Unexpected Error", "An unexpected error occurred - Check console or close program")
 
 def getweatherforecast(lat, lon):
     print("[=STR=] - Get Weather Forecast Data")
     print("[ Sys ] - Current Function: getweatherforecast")
     print("[ Sys ] - Api call Start")
-    api_response = requests.get(f"https://api.openweathermap.org/data/2.5/forecast/daily?lat={lat}&lon={lon}&cnt=7&appid={YOUR_API_KEY}")
+    api_response = requests.get(f"https://api.openweathermap.org/data/2.5/forecast/daily?lat={lat}&lon={lon}&cnt=7&appid={YOUR_API_KEY}") #replace YOUR_API_KEY with your key to get weather data
     data = api_response.json()
     if api_response.status_code==200:
         print("[ Ack ] - Api Status: ", api_response.status_code)
@@ -71,16 +75,21 @@ def getweatherforecast(lat, lon):
         print("[ Sys ] - Assigning Variables")
 
         print("[ Sys ] - Rqst empty, for now")
+
+        print("[=END=] - Get Weather Forecast Data")
         
     elif api_response.status_code==404:
         print("[ Err ] Denied - Status: ", api_response.status_code)
         print("[ Err ] Denied - Server could not find the client-requested webpage")
         print("[ Err ] Denied - Text: ", api_response.text)
         print("[ Err ] Denied - Data: ", data)
+        print("[=END=] - Get Weather Forecast Data")
         messagebox.showerror("Failed to contact server", "Error 404 - could not contact server. Check your internet connection and try again.")
+        
     else:
         print("[ Err ] Request Failed: Other - Status: ", api_response.status_code)
         print("[ Err ] Request Failed: Other - Text: ", api_response.text)
+        print("[=END=] - Get Weather Forecast Data")
         messagebox.showerror("Unexpected Error", "An unexpected error occurred - Check console or close program")
 
 def place_marker(coords):
@@ -88,7 +97,7 @@ def place_marker(coords):
     global set_marker
     print("[=STR=] - Click Map Data")
     print("[ Sys ] - Current Function: place_marker")
-    print("[ Sys ] - User Interaction : Lat-", lat, "Lon-", lon)
+    print(f"[ Sys ] - User Interaction : Lat-{lat} Lon-{lon}")
     if set_marker is not None:
         set_marker.delete()
         print("[ Sys ] - Deleted Previous Marker")
@@ -98,6 +107,7 @@ def place_marker(coords):
     getweathercurrent(lat, lon)
     print("[ Sys ] - Function Call : getweatherforecast")
     getweatherforecast(lat, lon)
+    print("[=END=] - Click Map Data")
 
     
     
@@ -105,14 +115,50 @@ def place_marker(coords):
 # - - - - VISUAL - - - -
 root_tk = tk.Tk()
 root_tk.geometry(f"{800}x{500}")
-root_tk.title("Dr.Matvey's Syke Værapp")
+root_tk.title("Dr. Matvey's Wicked Weather App")
 root_tk.resizable(False, False)
 
+root_tk.grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
+root_tk.grid_columnconfigure((0, 1, 2, 3, 4), weight=1)
+
 map_widget = tkmap.TkinterMapView(root_tk, width=500, height=500, corner_radius=0)
-map_widget.grid(rowspan = 2, padx = 0, pady = 0)
+map_widget.grid(row=0, column=0, rowspan=5, padx=0, pady=0)
 map_widget.set_position(59.669199, 9.647202)
 map_widget.set_zoom(12)
-map_widget.add_left_click_map_command(place_marker)
+
+title_static = tk.StringVar()
+title_static.set("Dr. Matvey's Wicked Weather App")
+
+
+description_static = tk.StringVar()
+description_static.set("Welcome! Click on the map to see weather data.")
+
+
+title_static_label = tk.Label(
+    root_tk,
+    textvariable=title_static,
+    anchor=tk.CENTER,
+    font=("Arial", 14, "bold"),
+    fg="black",
+    padx=25,
+    pady=10,
+    justify=tk.CENTER,
+)
+title_static_label.grid(row=0, column=1, columnspan=2, rowspan=1)
+
+description_static_label = tk.Label(
+    root_tk,
+    textvariable=description_static,
+    anchor=tk.CENTER,
+    font=("Arial", 10),
+    fg="black",
+    padx=25,
+    pady=10,
+    justify=tk.CENTER,
+)
+description_static_label.grid(row=0, column=1, columnspan=2, rowspan=2)
+
+
 
 
 root_tk.mainloop()
@@ -120,4 +166,4 @@ root_tk.mainloop()
 
 #KI BRUKT TIL: 
 #Slette gammel map marker slik at det ikke blir laget flere markers
-#
+#Forklare feilmeldinger
