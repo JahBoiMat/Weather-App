@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime
 
-v="0.1.1" # version number, remember to update!
+v="0.1.2" # version number, remember to update!
 print("")
 print(f"<<-- Dr.Matvey's Wicked Weather App Console Log-->>     Version: {v}")
 print("""
@@ -117,6 +117,7 @@ def place_marker(coords):
 root_tk = tk.Tk()
 root_tk.geometry(f"{800}x{500}")
 root_tk.title("Dr. Matvey's Wicked Weather App")
+root_tk.iconbitmap("logo.ico")
 root_tk.resizable(False, False)
 
 root_tk.grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
