@@ -40,12 +40,13 @@ def getweathercurrent(lat, lon):
         country = data["sys"]["country"]
         city = data["name"]
         condition = data["weather"][0]["description"]
-        temperature = data["main"]["temp"]
+        temp = data["main"]["temp"]
+        feelslike = data["main"]["feels_like"]
         min_temp = data["main"]["temp_min"]
         max_temp = data["main"]["temp_max"]
         pressure = data["main"]["pressure"]
         humidity = data["main"]["humidity"]
-        print("[ Sys ] - Readable Format: ","City: ", city ,"Country: ", country,"Condition: ", condition,"Temperature: ", temperature,"Minimum Temp: ", min_temp,"Maximum Temp: ", max_temp,"Humidity: ", humidity,"Pressure: ", pressure)
+        print("[ Sys ] - Readable Format: ","City: ", city ,"Country: ", country,"Condition: ", condition,"Temperature: ", temp,"Feels like: ", feelslike, "Minimum Temp: ", min_temp,"Maximum Temp: ", max_temp,"Humidity: ", humidity,"Pressure: ", pressure)
         
     elif api_response.status_code==404:
         print("[ Err ] Denied - Status: ", api_response.status_code)
@@ -79,10 +80,10 @@ def getweatherforecast(lat, lon):
         print("[ Err ] Request Failed: Other - Text: ", api_response.text)
 
 def place_marker(coords):
+    lat, lon = coords
     global set_marker
     print("[=STR=] - Click Map Data")
     print("[ Sys ] - Current Function: place_marker")
-    lat, lon = coords
     print("[ Sys ] - User Interaction : Lat-", lat, "Lon-", lon)
     if set_marker is not None:
         set_marker.delete()
