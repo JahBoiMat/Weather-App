@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime
 
-v="0.1.3" # version number
+v="0.1.4" # version number
 print("")
 print(f"<<-- Dr.Matvey's Wicked Weather App Console Log-->>     Version: {v}")
 print("""
@@ -46,14 +46,14 @@ def getweathercurrent(lat, lon): # get current weather
         condition = data["weather"][0]["description"]
         temp = data["main"]["temp"]
         temp_feels = data["main"]["feels_like"]
-        temp_min = data["main"]["temp_min"]
-        temp_max = data["main"]["temp_max"]
         pressure = data["main"]["pressure"]
         humidity = data["main"]["humidity"]
-        print(f"[ Sys ] - Readable Format: City: {city} | Country: {country} | Conditions: {condition} | Temperature: {temp}°C | Feels like: {temp_feels}°C | Min temp: {temp_min}°C Max temp: {temp_max}°C | Pressure: {pressure}Pa | Humidity: {humidity}% |")
+        wind_speed =data["wind"]["speed"]
+        wind_deg = data["wind"]["deg"]
+        print(f"[ Sys ] - Readable Format: City: {city} | Country: {country} | Conditions: {condition} | Temperature: {temp}°C | Feels like: {temp_feels}°C | Pressure: {pressure}Pa | Humidity: {humidity}% | Wind Speed {wind_speed}m/s | Wind Deg: {wind_deg}°")
 
-        weather_location.set(f"Showing for {city}, {country}")
-        weather_current.set(f"Condition: {condition} Temp: {temp}°C (Feels like: {temp_feels}°C) Humidity {humidity}%")
+        weather_location.set(f"Conditions in {city}, {country}")
+        weather_current.set(f"Current condition(s): {condition}. Temperature at {temp}°C (Feels like: {temp_feels}°C) Winds at {wind_speed}m/s from {wind_deg}°. Pressure: {pressure}Pa Humidity: {humidity}%")
 
         print("[=END=] - Get Current Weather Data")
     elif api_response.status_code==404: 
@@ -146,7 +146,7 @@ description_static = tk.StringVar()
 description_static.set("Welcome! Click on the map to see weather data.")
 
 version = tk.StringVar()
-version.set(f"Version: {v}")
+version.set(f"Version: {v} - ©Matvey Golovtsov 2025 All rights reserved")
 
 weather_location = tk.StringVar()
 weather_current = tk.StringVar()
@@ -202,11 +202,12 @@ weather_current_label = tk.Label(
     root_tk,
     textvariable=weather_current,
     anchor=tk.CENTER,
-    font=("Arial", 8, "bold"),
+    font=("Arial", 8),
     fg="black",
     padx=10,
     pady=10,
     justify=tk.CENTER,
+    wraplength=320
 )
 weather_current_label.grid(row=2, column=1, columnspan=2, rowspan=1)
 
