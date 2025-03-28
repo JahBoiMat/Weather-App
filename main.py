@@ -2,11 +2,11 @@ import requests
 import tkinter as tk
 from tkinter import messagebox
 import tkintermapview as tkmap
-import os
-from dotenv import load_dotenv
+import os # You dont need this if you hardcode your API key
+from dotenv import load_dotenv # You dont need this if you hardcode your API key
 from datetime import datetime
 
-v="0.1.5" # version number
+v="0.1.6" # version number
 print("")
 print(f"<<-- Dr.Matvey's Wicked Weather App Console Log-->>     Version: {v}")
 print("""
@@ -21,12 +21,10 @@ This console is used for debugging only, please look to TkInter Window for reada
 """)
 print("<<===== LOG =====>>")
 print("[=STR=] - Main Start")
-load_dotenv(".env")
-YOUR_API_KEY = os.getenv('apikey') #testkey = test key (t) apikey = main key
+load_dotenv(".env") # You dont need this if you hardcode your API key
+YOUR_API_KEY = os.getenv('apikey') #testkey = test key (t) apikey = main key # You dont need this if you hardcode your API key
 set_marker = None
-print("[ Idl ] - Idle, Click on map") 
-
-
+set_location = None 
 #-----------------------#
 # - - - - LOGIC - - - - #
 #-----------------------#
@@ -52,9 +50,8 @@ def getweathercurrent(lat, lon): # get current weather
         wind_deg = data["wind"]["deg"]
 
         print(f"[ Sys ] - Readable Format: City: {city} | Country: {country} | Conditions: {condition} | Temperature: {temp}°C | Feels like: {temp_feels}°C | Pressure: {pressure}Pa | Humidity: {humidity}% | Wind Speed {wind_speed}m/s | Wind Deg: {wind_deg}°")
-
         weather_location.set(f"Conditions in {city}, {country}")
-        weather_current.set(f"Current condition(s): {condition}. Temperature at {temp}°C (Feels like: {temp_feels}°C) Winds at {wind_speed}m/s from {wind_deg}°. Pressure: {pressure}Pa Humidity: {humidity}%")
+        weather_current.set(f"Current condition(s): {condition}. Temperature is {temp}°C (Feels like: {temp_feels}°C) Winds at {wind_speed}m/s from {wind_deg}°. Pressure: {pressure}Pa Humidity: {humidity}%")
 
         print("[=END=] - Get Current Weather Data")
 
@@ -90,13 +87,13 @@ def getweatherforecast(lat, lon): # get 7 day forecast
             day = datetime.fromtimestamp(day["dt"]).strftime("%A %d.%m")
             print("[ Sys ] - Assigning Variables")
 
-            condition = data["weather"][0]["description"]
-            temp = data["temp"]["day"]
-            temp_min = data["temp"]["min"]
-            temp_max = data["temp"]["max"]
-            humidity = data["humidity"]
+            condition = day["weather"][0]["description"]
+            temp = day["temp"]["day"]
+            temp_min = day["temp"]["min"]
+            temp_max = day["temp"]["max"]
+            humidity = day["humidity"]
 
-            forecast_list.append(f"{day}: Will be {condition}. Temp: {temp}°C (Min: {temp_min}°C Max: {temp_max}°C) Humidity {humidity}% \n")
+            forecast_list.append(f"{day}: Will be {condition}. Temp - Hi:{temp_max}°C Lo:{temp_min}°C Humidity {humidity}% \n")
             print(f"[ Sys ] - Added {day} data to list")
         
         print("[ Sys ] - Forecast List Updated")
@@ -135,8 +132,6 @@ def place_marker(coords): #User map interaction
     print("[ Sys ] - Function Call : getweatherforecast")
     getweatherforecast(lat, lon)
     print("[=END=] - Click Map Data")
-
-    
     
 #------------------------#
 # - - - - VISUAL - - - - #
@@ -144,7 +139,7 @@ def place_marker(coords): #User map interaction
 root_tk = tk.Tk()
 root_tk.geometry(f"{800}x{500}")
 root_tk.title("Dr. Matvey's Wicked Weather App")
-root_tk.iconbitmap("logo.ico")
+root_tk.iconbitmap("logo.ico") #uncomment to add logo
 root_tk.resizable(False, False)
 root_tk.grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
 root_tk.grid_columnconfigure((0, 1, 2, 3, 4), weight=1)
@@ -154,9 +149,6 @@ map_widget.grid(row=0, column=0, rowspan=5, padx=0, pady=0)
 map_widget.set_position(59.669199, 9.647202)
 map_widget.set_zoom(12)
 map_widget.add_left_click_map_command(place_marker)
-
-
-
 
 #Labels
 title_static = tk.StringVar()
@@ -172,6 +164,14 @@ weather_location = tk.StringVar()
 weather_current = tk.StringVar()
 weather_forecast = tk.StringVar()
 
+if set_location is None:
+    weather_location.set("No location Selected")
+    weather_current.set("No weather data to display. Please select a location.")
+    weather_forecast.set("No forecast data availbale. Please select a location.")
+    print("[ Sys ] - No location selected")
+    print("[ Idl ] - Idle, awaiting user interaction")
+else:
+    pass
 
 #Label Design / Layout
 title_static_label = tk.Label(
@@ -235,12 +235,14 @@ weather_forecast_label = tk.Label(
     root_tk,
     textvariable=weather_forecast,
     anchor=tk.CENTER,
-    font=("Arial", 14, "bold"),
+    font=("Arial", 8),
     fg="black",
-    padx=25,
+    padx=10,
+    pady=10,
     justify=tk.CENTER,
+    wraplength=320
 )
-weather_forecast_label.grid(row=2, column=1, columnspan=2, rowspan=3)
+weather_forecast_label.grid(row=1, column=1, columnspan=2, rowspan=3)
 
 
 
