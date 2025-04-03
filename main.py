@@ -6,8 +6,9 @@ import os # You dont need this if you hardcode your API key
 from dotenv import load_dotenv # You also dont need this if you hardcode your API key
 from datetime import datetime
 
-v="0.2.1" # version number
+v="0.2.2" # version number
 print("")
+print("<<-- Repository: https://github.com/JahBoiMat/Weather-App -->>")
 print(f"<<-- Dr.Matvey's Wicked Weather App Console Log-->>     Version: {v}")
 print("""
 Log Acro List: 
