@@ -6,7 +6,7 @@ import os # You dont need this if you hardcode your API key
 from dotenv import load_dotenv # You also dont need this if you hardcode your API key
 from datetime import datetime
 
-v="0.1.9" # version number
+v="0.2.0" # version number
 print("")
 print(f"<<-- Dr.Matvey's Wicked Weather App Console Log-->>     Version: {v}")
 print("""
@@ -21,10 +21,11 @@ This console is used for debugging only, please look to TkInter Window for reada
 """)
 print("<<===== LOG =====>>")
 print("[=STR=] - Main Start")
-load_dotenv(".env") # You dont need this if you hardcode your API key
-YOUR_API_KEY = os.getenv('apikey') #testkey = test key (t) apikey = main key # You dont need this if you hardcode your API key
+load_dotenv(".env") # You also ALSO dont need this if you hardcode your API key
+YOUR_API_KEY = os.getenv('apikey') #testkey = test key (t) apikey = main key # You also ALSO ALSOOO dont need this if you hardcode your API key
 set_marker = None
 set_location = None 
+
 #-----------------------#
 # - - - - LOGIC - - - - #
 #-----------------------#
@@ -196,7 +197,6 @@ weather_forecast_label.grid(row=1, column=1, columnspan=2, rowspan=4)
 root_tk.mainloop()
 
 #KI BRUKT TIL: 
-#Slette gammel map marker slik at det ikke blir laget flere markers
 #Forklare feilmeldinger <- 
 #Forklare hvordan grid fungerer i tkinter
 #Hvordan jeg kan hente ut 1 og 1 dag fra forecast lista og legge den til i en felles liste for å bli vist i den label tingen
