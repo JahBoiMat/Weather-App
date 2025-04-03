@@ -6,18 +6,18 @@ import os # You dont need this if you hardcode your API key
 from dotenv import load_dotenv # You also dont need this if you hardcode your API key
 from datetime import datetime
 
-v="0.2.0" # version number
+v="0.2.1" # version number
 print("")
 print(f"<<-- Dr.Matvey's Wicked Weather App Console Log-->>     Version: {v}")
 print("""
-Log Actor List: 
+Log Acro List: 
 [ Ack ] (Acknowledge) = Api acknowledge message.
 [ Sys ] (System) = Process related message / Process Status.
 [ Err ] (Error) = Error/Exeption - Related to current process.
-[ Idl ] (Idle) = Idle/Waiting, no processes.
-[=STR=] (Start) = Marks start of a function - The following logs are related to this process until [=END=] is called.
+[ Idl ] (Idle) = Idle/Waiting for input.
+[=STR=] (Start) = Marks start of a function - The following prints are related to this process until [=END=].
 [=END=] (End) = Marks end of a function.
-This console is used for debugging only, please look to TkInter Window for readable weather data.
+This console is used for debugging, please look to the Python Window for a readable application and Weather data.
 """)
 print("<<===== LOG =====>>")
 print("[=STR=] - Main Start")
@@ -43,6 +43,7 @@ def getweathercurrent(lat, lon): # get current weather
         if "sys" in data and "country" in data["sys"]:
             country = data["sys"]["country"]
         else:
+            print("[ Sys ] - Invalid location (e.g. ocean)")
             country = "N/A"
         city = data["name"]
         condition = data["weather"][0]["description"]
@@ -71,7 +72,7 @@ def getweathercurrent(lat, lon): # get current weather
         print("[ Err ] Request Failed: Other - Status: ", api_response.status_code)
         print("[ Err ] Request Failed: Other - Text: ", api_response.text)
         print("[=END=] - Get Current Weather Data")
-        messagebox.showerror("Unexpected Error", "An unexpected error occurred - Check console or close program")
+        messagebox.showerror("Unexpected Error", "An unexpected error occurred - Check terminal or close program")
 
 
 def getweatherforecast(lat, lon): # get 7 day forecast
@@ -85,7 +86,7 @@ def getweatherforecast(lat, lon): # get 7 day forecast
         print("[ Ack ] - Api Returned Data: ", data)
         
         forecast_list = []
-        print("[ Sys ] -  Adding Forecast Data to List")
+        print("[ Sys ] - Adding Forecast Data to List")
         for day in data["list"][1:]: 
             weekday = datetime.fromtimestamp(day["dt"]).strftime("%A")
 
@@ -112,7 +113,7 @@ def getweatherforecast(lat, lon): # get 7 day forecast
         print("[ Err ] Request Failed: Other - Status: ", api_response.status_code)
         print("[ Err ] Request Failed: Other - Text: ", api_response.text)
         print("[=END=] - Get Weather Forecast Data")
-        messagebox.showerror("Unexpected Error", "An unexpected error occurred - Check console or close program")
+        messagebox.showerror("Unexpected Error", "An unexpected error occurred - Check terminal or close program")
     
 
 
