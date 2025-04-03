@@ -6,7 +6,7 @@ import os # You dont need this if you hardcode your API key
 from dotenv import load_dotenv # You also dont need this if you hardcode your API key
 from datetime import datetime
 
-v="0.1.8" # version number
+v="0.1.9" # version number
 print("")
 print(f"<<-- Dr.Matvey's Wicked Weather App Console Log-->>     Version: {v}")
 print("""
@@ -91,7 +91,6 @@ def getweatherforecast(lat, lon): # get 7 day forecast
             condition = day["weather"][0]["description"]
             temp_min = day["temp"]["min"]
             temp_max = day["temp"]["max"]
-            humidity = day["humidity"]
 
             forecast_list.append(f"{weekday}: {condition.capitalize()}. Temp - Hi:{temp_max}°C Lo:{temp_min}°C")
             print(f"[ Sys ] - Added {weekday} data to list")
@@ -200,5 +199,4 @@ root_tk.mainloop()
 #Slette gammel map marker slik at det ikke blir laget flere markers
 #Forklare feilmeldinger <- 
 #Forklare hvordan grid fungerer i tkinter
-#Den tingen som lister gjennom dager og legger til dager i lista
-#Den tingen som får med "Mandag" "Tirsdag" "Torsdag" osv
+#Hvordan jeg kan hente ut 1 og 1 dag fra forecast lista og legge den til i en felles liste for å bli vist i den label tingen
