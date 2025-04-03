@@ -6,7 +6,7 @@ import os # You dont need this if you hardcode your API key
 from dotenv import load_dotenv # You also dont need this if you hardcode your API key
 from datetime import datetime
 
-v="0.1.7" # version number
+v="0.1.8" # version number
 print("")
 print(f"<<-- Dr.Matvey's Wicked Weather App Console Log-->>     Version: {v}")
 print("""
@@ -39,7 +39,10 @@ def getweathercurrent(lat, lon): # get current weather
         print("[ Ack ] - Api Returned Data: ", data)
         print("[ Sys ] - Assigning Variables")
 
-        country = data["sys"]["country"]
+        if "sys" in data and "country" in data["sys"]:
+            country = data["sys"]["country"]
+        else:
+            country = "N/A"
         city = data["name"]
         condition = data["weather"][0]["description"]
         temp = data["main"]["temp"]
@@ -90,7 +93,7 @@ def getweatherforecast(lat, lon): # get 7 day forecast
             temp_max = day["temp"]["max"]
             humidity = day["humidity"]
 
-            forecast_list.append(f"{weekday}: {condition.capitalize()}. Temp - Hi:{temp_max}°C Lo:{temp_min}°C Humidity: {humidity}%rh")
+            forecast_list.append(f"{weekday}: {condition.capitalize()}. Temp - Hi:{temp_max}°C Lo:{temp_min}°C")
             print(f"[ Sys ] - Added {weekday} data to list")
         
         print("[ Sys ] - Forecast List Updated")
@@ -183,11 +186,11 @@ version_label.grid(row=4, column=1, columnspan=2, rowspan=2)
 weather_location_label = tk.Label(root_tk, textvariable=weather_location, anchor=tk.CENTER, font=("Arial", 14, "bold"), fg="black", padx=10, justify=tk.CENTER)
 weather_location_label.grid(row=1, column=1, columnspan=2, rowspan=1)
 
-weather_current_label = tk.Label(root_tk, textvariable=weather_current, anchor=tk.CENTER, font=("Arial", 10), fg="black", padx=10, pady=10, justify=tk.CENTER, wraplength=310)
+weather_current_label = tk.Label(root_tk, textvariable=weather_current, anchor=tk.CENTER, font=("Arial", 9), fg="black", padx=10, pady=10, justify=tk.CENTER, wraplength=310)
 weather_current_label.grid(row=1, column=1, columnspan=2, rowspan=2)
 
 weather_forecast_label = tk.Label(root_tk, textvariable=weather_forecast, anchor=tk.CENTER, font=("Arial", 8), fg="black", padx=10, pady=10, justify=tk.CENTER, wraplength=320)
-weather_forecast_label.grid(row=2, column=1, columnspan=2, rowspan=4)
+weather_forecast_label.grid(row=1, column=1, columnspan=2, rowspan=4)
 
 
 
